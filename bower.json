@@ -1,0 +1,15 @@
+{
+  "name": "quill-element",
+  "description": "Polymer Quill element (richtext editor)",
+  "main": "quill-element.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "quill": "https://github.com/quilljs/quill/releases/download/v1.0.4/quill.tar.gz"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  }
+}

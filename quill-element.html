@@ -1,0 +1,99 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="stylesheet" href="../quill/quill.bubble.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/styles/monokai-sublime.min.css" />
+<link rel="stylesheet" href="../quill/quill.snow.css" />
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.3.0/highlight.min.js"></script>
+<script type="text/javascript" src="../quill/quill.min.js"></script>
+
+<!--
+`quill-element`
+Polymer Quill element (richtext editor)
+
+The meaning of the attributes should be quite obvious once you read http://quilljs.com/docs/configuration/
+
+@demo demo/index.html 
+-->
+
+<dom-module id="quill-element">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+      #quillcontainer {
+        width: 100%;
+        height: 100%;
+      }
+    </style>
+    <div id="quillcontainer"></div>
+  </template>
+
+  <script>
+    Polymer({
+      ready: function () {
+        this.quill = new Quill(this.$.quillcontainer, {
+          modules: {
+            formula: true,
+            syntax: true,
+            toolbar: this.toolbar
+          },
+          theme: this.theme,
+          readOnly: this.readOnly,
+          placeholder: this.placeholder
+        })
+      },
+      is: 'quill-element',
+      properties: {
+        /**
+         * The quill theme. Choose either "snow" or "bubble".
+         * 
+         * Defaults to "snow"
+         */
+        theme: {
+          type: String,
+          value: 'snow',
+          notify: true
+        },
+        /**
+         * Configuration of the toolbar.
+         * 
+         * Defaults to the inclusion of all known modules.
+         */
+        toolbar: {
+          type: Array,
+          notify: true,
+          value: [
+            [{ size: ['small', false, 'large', 'huge'] }],
+            ['bold', 'italic', 'underline'],
+            [{ color: [] }, { background: [] }],    // Snow theme fills in values
+            [{ script: 'sub' }, { script: 'super' }],
+            ['link', 'image'],
+            ['link', 'code-block'],
+            [{list: 'ordered' }]
+          ]
+        },
+        /**
+         * Whether this instance is read-only
+         */
+        readOnly: {
+          type: Boolean,
+          notify: true,
+          value: false
+        },
+        /**
+         * Placeholder when there is no content
+         */
+        placeholder: {
+          type: String,
+          notify: true,
+          value: null
+        }
+      },
+
+    });
+  </script>
+</dom-module>

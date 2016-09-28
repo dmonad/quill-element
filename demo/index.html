@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+  <head>
+    <title>quill-element demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+
+    <link rel="import" href="../quill-element.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles"></style>
+  </head>
+  <body>
+
+    <div class="vertical-section-container centered">
+      <h3>Basic quill-element Demo</h3>
+      <demo-snippet>
+        <template>
+          <quill-element quill="{{quill}}" ></quill-element>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container centered">
+      <h3>Configure toolbar</h3>
+      <p> Note: write " instead of &amp;quot; i.e. </p>
+      <pre>&lt;quill-element toolbar='[[{ "size": ["small", false, "large", "huge"] }],["bold", "italic", "underline"]]'&gt;&lt;/quill-element&gt;</code></pre>
+      <demo-snippet>
+        <template>
+          <quill-element quill="{{quill}}" toolbar='[[{ "size": ["small", false, "large", "huge"] }],["bold", "italic", "underline"]]'></quill-element>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container centered">
+      <h3>Change theme</h3>
+      <demo-snippet>
+        <template>
+          <quill-element theme="bubble" placeholder="Hey, type something!" style="height: 130px;" toolbar='[["bold", "italic", "underline"]]'></quill-element>
+          
+        </template>
+      </demo-snippet>
+    </div>
+
+  </body>
+</html>
