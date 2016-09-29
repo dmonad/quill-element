@@ -10,8 +10,13 @@
 <script type="text/javascript" src="../quill/quill.min.js"></script>
 
 <!--
-# &lt;quill-element&gt;
-Polymer Web Component of the awesome Quill richtext editor!
+# &lt;quill-element&gt;  <iframe src="https://ghbtns.com/github-btn.html?user=dadamonad&repo=quill-element&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
+
+Polymer Web Component of the awesome [Quill](http://quilljs.com) richtext editor!
+
+```
+bower i --save quill-element
+```
 
 The `<quill-element>` exposes the complete API of its Quill instance. So you can easily add event handlers, or modify its content. I.e.
 
@@ -21,7 +26,7 @@ The `<quill-element>` exposes the complete API of its Quill instance. So you can
 ##### Call a method
 ```document.querySelector('quill-element').setText('Some content')```
 
-For a more in-depth documentation of the methods read the [Quill API](https://quilljs.com/docs/api/)! This documentation is incomplete and doesn't cover overloaded methods. 
+For a more in-depth documentation of the methods read the [Quill API](https://quilljs.com/docs/api/)! The following documentation is incomplete and does not cover overloaded methods. 
 
 ### Styling
 The following custom properties and mixins are available for styling:
@@ -43,7 +48,6 @@ Custom property | Description | Default
       }
       .ql-editor {
         flex: 1;
-        @apply(--quill-editor);
       }
       .ql-toolbar {
         @apply(--quill-toolbar);
@@ -54,6 +58,7 @@ Custom property | Description | Default
         overflow-y: auto;
         display: flex;
         flex-direction: column;
+        @apply(--quill-editor);
       }
     </style>
     <div id="quillcontainer"></div>
@@ -150,7 +155,7 @@ Custom property | Description | Default
           value: null
         },
         /**
-         * Disable the ability to edit
+         * Disables the ability to edit
          */
         disabled: {
           type: Boolean,
