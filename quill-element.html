@@ -13,7 +13,7 @@
 # `<quill-element>`
 > Polymer Web Component of the awesome Quill richtext editor!
 
-The `<quill-element>` exposes the complete API of its quill instance. So you can easily add event handlers, or modify its content. I.e.
+The `<quill-element>` exposes the complete API of its Quill instance. So you can easily add event handlers, or modify its content. I.e.
 
 ##### Create event listener
 ```<quill-element on-text-change="textChanged"></quill-element>```
@@ -98,7 +98,7 @@ Custom property | Description | Default
           notify: true
         },
         /**
-         * The quill theme. Choose either "snow" or "bubble".
+         * The Quill theme. Choose either "snow" or "bubble".
          */
         theme: {
           type: String,
@@ -176,7 +176,7 @@ Custom property | Description | Default
         return this.quill.enable(enabled)
       },
       /**
-       * Disables the ability to edit the editor. In addition to the quill API this method also accepts an optional parameter which specifies whether to disable the user input.
+       * Disables the ability to edit the editor. In addition to the Quill API this method also accepts an optional parameter which specifies whether to disable the user input.
        */
       disable: function (disabled) {
         disabled = disabled == null ? true : disabled
@@ -327,17 +327,17 @@ Custom property | Description | Default
         }
       }
       /**
-       * Fires when quill is initialized. Event param: The quill instance
+       * Fires when quill is initialized. Event param: The Quill instance
        * 
        * @event init
        */
       /**
-       * Fires when the editor contents changed. Event param: The quill delta
+       * Fires when the editor contents changed. Event param: The Quill delta
        * 
        * @event text-change
        */
       /**
-       * Fires when the selection changes. Event param: The quill delta
+       * Fires when the selection changes. Event param: The Quill delta
        * 
        * @event selection-change
        */
