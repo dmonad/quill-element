@@ -1,38 +1,19 @@
 # \<quill-element\>
 
-Polymer Quill element (richtext editor)
+> Polymer Web Component of the awesome [Quill](http://quilljs.com) richtext editor! - [Read the docs](dadamonad.github.io/quill-element/)
 
-## Install the Polymer-CLI
-
-First, make sure you have the [Polymer CLI](https://www.npmjs.com/package/polymer-cli) installed. Then run `polymer serve` to serve your application locally.
-
-## Viewing Your Application
+The `<quill-element>` exposes the complete API of its quill instance, and is highly configurable.
 
 ```
-$ polymer serve
+bower i --save quill-element
 ```
 
-## Building Your Application
-
 ```
-$ polymer build
+<quill-element></quill-element>
 ```
+:sparkles: :scream_cat: :sparkles:
 
-This will create a `build/` folder with `bundled/` and `unbundled/` sub-folders
-containing a bundled (Vulcanized) and unbundled builds, both run through HTML,
-CSS, and JS optimizers.
+![Quill Example](https://drive.google.com/uc?export=download&id=0B2Rd_uRJCv8cZzE0SjBLd0FqUU0)
 
-You can serve the built versions by giving `polymer serve` a folder to serve
-from:
-
-```
-$ polymer serve build/bundled
-```
-
-## Running Tests
-
-```
-$ polymer test
-```
-
-Your application is already set up to be tested via [web-component-tester](https://github.com/Polymer/web-component-tester). Run `polymer test` to run your application's test suite locally.
+### Contribute
+Pull requests are welcome. This project was built with `polymer-cli@0.16`

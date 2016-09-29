@@ -14,7 +14,7 @@
 
     <test-fixture id="basic">
       <template>
-        <quill-element></quill-element>
+        <quill-element debug></quill-element>
       </template>
     </test-fixture>
 
@@ -22,11 +22,43 @@
       suite('quill-element', function() {
 
         test('instantiating the element works', function() {
-          var element = fixture('basic');
-          assert.equal(element.is, 'quill-element');
-        });
+          var element = fixture('basic')
+          assert.equal(element.is, 'quill-element')
+        })
 
-      });
+        test('text-change event and insertText work', function () {
+          var element = fixture('basic')
+          var fired = false
+          element.addEventListener('text-change', function () {
+            fired = true
+          })
+          element.insertText(0, 'some text')
+          assert.equal(fired, true)
+        })
+
+        test('editor-change event and insertText work', function () {
+          var element = fixture('basic')
+          var fired = false
+          element.addEventListener('editor-change', function () {
+            fired = true
+          })
+          element.insertText(0, 'some text')
+          assert.equal(fired, true)
+        })
+
+        test('selection-change event and format work', function () {
+          var element = fixture('basic')
+          var fired = false
+          element.addEventListener('editor-change', function () {
+            fired = true
+          })
+          element.insertText(0, 'some text')
+          element.formatText(1, 3, 'bold', true)
+          assert.equal(fired, true)
+        })
+
+
+      })
     </script>
   </body>
 </html>
