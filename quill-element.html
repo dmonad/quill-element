@@ -25,6 +25,7 @@ For a more in-depth documentation of the methods read the [Quill API](https://qu
 
 ### Styling
 The following custom properties and mixins are available for styling:
+ 
 Custom property | Description | Default
 ----------------|-------------|----------
 `--quill-toolbar` | Mixin applied to the quill toolbar | `{}`
@@ -75,19 +76,17 @@ Custom property | Description | Default
         this.quill = new Quill(this.$.quillcontainer, configuration)
         this.fire('init', this.quill)
         var self = this
-        this.quill.on('text-change', function (event, source) {
-          self.fire('text-change', event, source)
+        this.quill.on('text-change', function (event) {
+          self.fire('text-change', event)
         })
-        this.quill.on('selection-change', function (event, source) {
-          self.fire('selection-change', event, source)
+        this.quill.on('selection-change', function (event) {
+          self.fire('selection-change', event)
         })
-        this.quill.on('editor-change', function () {
-          var args = ['editor-change'].concat(Array.prototype.slice.call(arguments))
-          self.fire.apply(self, args)
-        })
+        // Make the custom styles work (quill adds html elements after ready is called)
         for (var i = 0; i < this.children.length; i++) {
           this.scopeSubtree(this.children[i], false)
         }
+        this.quill.enable(!this.disabled)
       },
       is: 'quill-element',
       properties: {
@@ -151,12 +150,13 @@ Custom property | Description | Default
           value: null
         },
         /**
-         * Whether the user is able to edit the editor
+         * Disable the ability to edit
          */
-        enabled: {
+        disabled: {
           type: Boolean,
           notify: true,
-          observer: 'enable'
+          observer: 'disable',
+          value: false
         },
         /**
          * Enables logging (globaly for all Quill instances) at a given level: `'error'`, `'warn'`, `'log'`, and `'info'`. If `debug = ""` it logs at 'warn' level. So you can create an element like this: 
@@ -176,10 +176,13 @@ Custom property | Description | Default
         return this.quill.enable(enabled)
       },
       /**
-       * Disables the ability to edit the editor
+       * Disables the ability to edit the editor. In addition to the quill API this method also accepts an optional parameter which specifies whether to disable the user input.
        */
-      disable: function () {
-        return this.quill.disable()
+      disable: function (disabled) {
+        disabled = disabled == null ? true : disabled
+        if (this.quill != null) {
+          return this.quill.enable(!disabled)
+        }
       },
       /**
        * Retrieves the contents as a Quill Delta (see Quill docs)
@@ -226,8 +229,8 @@ Custom property | Description | Default
       /**
        * Synchronously checks the editor for updates and fire events
        */
-      update: function (source) {
-        this.quill.update()
+      update: function () {
+        return this.quill.update.apply(this.quill, arguments)
       },
       /**
        * Applies a quill delta to the editor contents
@@ -320,7 +323,7 @@ Custom property | Description | Default
         if (level) {
           Quill.debug(level)
         } else if (level === '') {
-          Quill.debug('log')
+          Quill.debug('warn')
         }
       }
       /**
@@ -329,19 +332,14 @@ Custom property | Description | Default
        * @event init
        */
       /**
-       * Fires when the editor contents changed.
+       * Fires when the editor contents changed. Event param: The quill delta
        * 
        * @event text-change
        */
       /**
-       * Fires when the selection changes
+       * Fires when the selection changes. Event param: The quill delta
        * 
        * @event selection-change
-       */
-      /**
-       * Fires when `text-change` or `seletcion-change` events would be fired, even when the source is `"silent"`
-       * 
-       * @event editor-change
        */
     });
   </script>
