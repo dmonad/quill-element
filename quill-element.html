@@ -44,7 +44,7 @@ Custom property | Description | Default
     <style>
       :host {
         display: flex;
-        flex-direction: column;
+        flex-flow: column;
       }
       .ql-editor {
         flex: 1;
@@ -54,10 +54,8 @@ Custom property | Description | Default
       }
       #quillcontainer {
         flex: 1;
-        height: initial;
-        overflow-y: auto;
         display: flex;
-        flex-direction: column;
+        flex-flow: column;
         @apply(--quill-editor);
       }
     </style>
