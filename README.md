@@ -1,6 +1,6 @@
 # \<quill-element\>
 
-> Polymer Web Component of the awesome [Quill](http://quilljs.com) richtext editor! - [Read the docs](dadamonad.github.io/quill-element/)
+> Polymer Web Component of the awesome [Quill](http://quilljs.com) richtext editor! - [Read the docs](https://dadamonad.github.io/quill-element/components/quill-element/)
 
 The `<quill-element>` exposes the complete API of its quill instance, and is highly configurable.
 
