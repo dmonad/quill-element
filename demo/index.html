@@ -18,7 +18,6 @@
     </style>
   </head>
   <body>
-
     <div class="vertical-section-container centered">
       <h3>Basic quill-element demo</h3>
       <demo-snippet>
@@ -68,7 +67,9 @@
           <!-- It is a good idea to specify a height, so that you can see the tooltip -->
           <style is="custom-style">
             .quill-bubble {
-              min-height: 150px;
+              --quill-editor: {
+                min-height: 150px;
+              }
             }
           </style>
           <quill-element class="quill-bubble" theme="bubble" placeholder="Hey, type something!" toolbar='[["bold", "italic", "underline"]]'></quill-element>

@@ -1,9 +1,9 @@
 <link rel="import" href="../polymer/polymer.html">
 
 <link rel="stylesheet" href="../quill/quill.bubble.css" />
+<link rel="stylesheet" href="../quill/quill.snow.css" />
 <link rel="stylesheet" href="../KaTeX/dist/katex.min.css" />
 <link rel="stylesheet" href="../highlightjs/styles/monokai-sublime.css" />
-<link rel="stylesheet" href="../quill/quill.snow.css" />
 
 <script type="text/javascript" src="../KaTeX/dist/katex.min.js"></script>
 <script type="text/javascript" src="../highlightjs/highlight.pack.min.js"></script>
@@ -35,6 +35,8 @@ Custom property | Description | Default
 ----------------|-------------|----------
 `--quill-toolbar` | Mixin applied to the quill toolbar | `{}`
 `--quill-editor` | Mixin applied to the quill editor | `{}`
+`--quill-editor-container` | Mixin applied to the quill editor container | `{}`
+
 
 @demo demo/index.html
 -->
@@ -46,20 +48,20 @@ Custom property | Description | Default
         display: flex;
         flex-flow: column;
       }
-      .ql-editor {
+      #editorContainer {
         flex: 1;
+        overflow-y: hidden;
+        @apply(--quill-editor-container)
+      }
+      .ql-editor {
+        height: 100%;
+        @apply(--quill-editor)
       }
       .ql-toolbar {
-        @apply(--quill-toolbar);
-      }
-      #quillcontainer {
-        flex: 1;
-        display: flex;
-        flex-flow: column;
-        @apply(--quill-editor);
+        @apply(--quill-toolbar)
       }
     </style>
-    <div id="quillcontainer"></div>
+    <div id="editorContainer"></div>
   </template>
 
   <script>
@@ -68,6 +70,7 @@ Custom property | Description | Default
         this.modules = this.modules || {}
         this.modules.toolbar = this.toolbar
         var configuration = {
+          bounds: this,
           modules: this.modules,
           theme: this.theme,
           readOnly: this.readOnly,
@@ -76,7 +79,7 @@ Custom property | Description | Default
         if (this.formats != null) {
           configuration.formats = this.formats
         }
-        this.quill = new Quill(this.$.quillcontainer, configuration)
+        this.quill = new Quill(this.$.editorContainer, configuration)
         this.fire('init', this.quill)
         var self = this
         this.quill.on('text-change', function (event) {
