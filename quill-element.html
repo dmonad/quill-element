@@ -174,7 +174,37 @@ Custom property | Description | Default
           type: String,
           notify: true,
           observer: 'enableDebug'
+        },
+        /**
+         *  Share the content of quill using [Yjs](https://github.com/y-js/yjs) and [y-element](https://github.com/y-js/y-element). E.g.
+         *
+         * ```
+<y-element
+  connector-name="websockets-client"
+  connector-room="quill-testing"
+  db-name="memory">
+  <y-type
+    name="quill"
+    type="Richtext"
+    data="{{richtext}}"></y-type>
+</y-element>
+<quill-element y-richtext="{{richtext}}"></quill-element>
+         * ```
+         */
+        yRichtext: {
+          type: String,
+          notify: true,
+          observer: 'bindYRichtext'
         }
+      },
+      /**
+       * Bind this editor to a [Y.Richtext](https://github.com/y-js/y-richtext) type
+       */
+      bindYRichtext: function (yrichtext) {
+        if (yrichtext.type != null) {
+          yrichtext = yrichtext.type
+        }
+        yrichtext.bind(this)
       },
       /**
        * Sets the ability to edit the editor
