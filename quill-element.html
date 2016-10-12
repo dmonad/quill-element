@@ -208,7 +208,8 @@ Custom property | Description | Default
           yrichtext = yrichtext.type
         }
         if (this.quill != null) {
-          yrichtext.bind(this.quill)
+          yrichtext.unbindQuillAll()
+          yrichtext.bindQuill(this.quill)
         }
       },
       /**
