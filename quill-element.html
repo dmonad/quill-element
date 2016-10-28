@@ -62,12 +62,31 @@ Custom property | Description | Default
         @apply(--quill-toolbar)
       }
     </style>
-    <div id="editorContainer"></div>
   </template>
 
   <script>
     Polymer({
       ready: function () {
+        this._reloadTimeout = null
+        this.init()
+      },
+      sheduleReload: function () {
+        if (this._reloadTimeout == null) {
+          var self = this
+          this._reloadTimeout = window.setTimeout(function () {
+            self.init()
+          }, 0)
+        }
+      },
+      init: function () {
+        var children = this.children
+        for (var i = children.length - 1; i >= 0; i--) {
+          children[i].remove()
+        }
+        var editorContainer = document.createElement('div')
+        editorContainer.setAttribute('id', 'editorContainer')
+        this.insertBefore(editorContainer, null)
+
         this.modules = this.modules || {}
         this.modules.toolbar = this.toolbar
         var configuration = {
@@ -80,7 +99,7 @@ Custom property | Description | Default
         if (this.formats != null) {
           configuration.formats = this.formats
         }
-        this.quill = new Quill(this.$.editorContainer, configuration)
+        this.quill = new Quill(editorContainer, configuration)
         this.fire('init', this.quill)
         var self = this
         this.quill.on('text-change', function (event) {
@@ -91,12 +110,17 @@ Custom property | Description | Default
         })
         // Make the custom styles work (quill adds html elements after ready is called)
         for (var i = 0; i < this.children.length; i++) {
-          this.scopeSubtree(this.children[i], false)
+          this.scopeSubtree(this.children[i], true)
         }
-        this.quill.enable(!this.disabled)
+        if (this.disabled) {
+          this.quill.disable()
+        }
         if (this.yRichtext != null) {
           this.bindYRichtext(this.yRichtext)
         }
+        // make sure init is not called again
+        clearTimeout(this._reloadTimeout)
+        this._reloadTimeout = null
       },
       is: 'quill-element',
       properties: {
@@ -105,7 +129,8 @@ Custom property | Description | Default
          */
         formats: {
           type: Array,
-          notify: true
+          notify: true,
+          observer: 'sheduleReload'
         },
         /**
          * The Quill theme. Choose either "snow" or "bubble".
@@ -113,7 +138,8 @@ Custom property | Description | Default
         theme: {
           type: String,
           value: 'snow',
-          notify: true
+          notify: true,
+          observer: 'sheduleReload'
         },
         /**
          * Module configuration. `modules.toolbar` is overwritten by the toolbar property 
@@ -124,7 +150,8 @@ Custom property | Description | Default
             formula: true,
             syntax: true
           },
-          notify: true
+          notify: true,
+          observer: 'sheduleReload'
         },
         /**
          * Configuration of the toolbar
@@ -141,7 +168,8 @@ Custom property | Description | Default
             ['link', 'image', 'video'],
             ['code-block', 'formula', 'blockquote'],
             ['clean']
-          ]
+          ],
+          observer: 'sheduleReload'
         },
         /**
          * Whether this instance is read-only
@@ -149,7 +177,8 @@ Custom property | Description | Default
         readOnly: {
           type: Boolean,
           notify: true,
-          value: false
+          value: false,
+          observer: 'disable'
         },
         /**
          * Placeholder when there is no content
@@ -157,7 +186,8 @@ Custom property | Description | Default
         placeholder: {
           type: String,
           notify: true,
-          value: null
+          value: null,
+          observer: 'sheduleReload'
         },
         /**
          * Disables the ability to edit
