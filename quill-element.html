@@ -264,12 +264,16 @@ Custom property | Description | Default
        * Bind this editor to a [Y.Richtext](https://github.com/y-js/y-richtext) type
        */
       bindYRichtext: function (yrichtext) {
-        if (yrichtext.type != null) {
-          yrichtext = yrichtext.type
-        }
-        if (this.quill != null) {
-          yrichtext.unbindQuillAll()
-          yrichtext.bindQuill(this.quill)
+        if (yrichtext != null) {
+          if (yrichtext.type != null) {
+            yrichtext = yrichtext.type
+          }
+          if (this.quill != null) {
+            yrichtext.unbindQuillAll()
+            yrichtext.bindQuill(this.quill)
+          }
+        } else if (this.quill != null && this.quill.yRichtextBinding != null) {
+          this.quill.yRichtextBinding.unbindQuillAll()
         }
       },
       /**
