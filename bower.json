@@ -14,7 +14,7 @@
     "web-component-tester": "^4.0.0",
     "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
   },
-  "homepage": "https://dadamonad.github.io/quill-element/",
+  "homepage": "https://dmonad.github.io/quill-element/",
   "authors": [
     "Kevin Jahns <kevin.jahns@rwth-aachen.de>"
   ],
