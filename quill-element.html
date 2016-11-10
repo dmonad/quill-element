@@ -297,6 +297,12 @@ Custom property | Description | Default
         }
       },
       /**
+       * Delete a range of text
+       */
+      deleteText: function (index, length) {
+        return this.quill.deleteText.apply(this.quill, arguments)
+      },
+      /**
        * Retrieves the contents as a Quill Delta (see Quill docs)
        */
       getContents: function (index, length) {
