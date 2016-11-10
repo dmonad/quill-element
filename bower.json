@@ -4,7 +4,7 @@
   "main": "quill-element.html",
   "dependencies": {
     "polymer": "Polymer/polymer#^1.4.0",
-    "quill": "https://github.com/quilljs/quill/releases/download/v1.0.4/quill.tar.gz",
+    "quill": "https://github.com/quilljs/quill/releases/download/v1.1.5/quill.tar.gz",
     "KaTeX": "katex#^0.6.0",
     "highlightjs": "^9.6.0"
   },
