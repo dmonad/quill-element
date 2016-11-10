@@ -70,6 +70,11 @@ Custom property | Description | Default
         this._reloadTimeout = null
         this.init()
       },
+      detached: function () {
+        if (this.quill != null && this.quill.yRichtextBinding != null) {
+          this.quill.yRichtextBinding.unbindQuillAll()
+        }
+      },
       sheduleReload: function () {
         if (this._reloadTimeout == null) {
           var self = this
@@ -234,6 +239,9 @@ Custom property | Description | Default
        * Bind this editor to a [Y.Richtext](https://github.com/y-js/y-richtext) type
        */
       bindYRichtext: function (yrichtext) {
+        if (yrichtext == null) {
+          return
+        }
         if (yrichtext.type != null) {
           yrichtext = yrichtext.type
         }
