@@ -48,18 +48,32 @@ Custom property | Description | Default
         display: flex;
         flex-flow: column;
         box-sizing: border-box;
+        border: 1px solid #ccc;
       }
       #editorContainer {
         flex: 1;
         overflow-y: hidden;
+        border: 0;
         @apply(--quill-editor-container)
       }
       .ql-editor {
         height: 100%;
-        @apply(--quill-editor)
+        @apply(--quill-editor);
       }
       .ql-toolbar {
-        @apply(--quill-toolbar)
+        border-top: 0;
+        border-right: 0;
+        border-left: 0;
+        border-bottom: 1px solid #ccc;
+      }
+      .ql-toolbar {
+        @apply(--quill-toolbar);
+      }
+      :host([_hide-tools]) .ql-toolbar {
+        display: none !important;
+      }
+      :host([_hide-tools]) .ql-tooltip {
+        display: none !important;
       }
     </style>
   </template>
@@ -233,21 +247,38 @@ Custom property | Description | Default
           type: String,
           notify: true,
           observer: 'bindYRichtext'
+        },
+        /**
+         * Hide toolbar / hide tooltip
+         */
+        hideTools: {
+          type: Boolean,
+          notify: true,
+          value: false,
+          observer: '_hideTools'
+        }
+      },
+      _hideTools: function (hide) {
+        if (hide) {
+          this.setAttribute('_hide-tools', true)
+        } else {
+          this.removeAttribute('_hide-tools')
         }
       },
       /**
        * Bind this editor to a [Y.Richtext](https://github.com/y-js/y-richtext) type
        */
       bindYRichtext: function (yrichtext) {
-        if (yrichtext == null) {
-          return
-        }
-        if (yrichtext.type != null) {
-          yrichtext = yrichtext.type
-        }
-        if (this.quill != null) {
-          yrichtext.unbindQuillAll()
-          yrichtext.bindQuill(this.quill)
+        if (yrichtext != null) {
+          if (yrichtext.type != null) {
+            yrichtext = yrichtext.type
+          }
+          if (this.quill != null) {
+            yrichtext.unbindQuillAll()
+            yrichtext.bindQuill(this.quill)
+          }
+        } else if (this.quill != null && this.quill.yRichtextBinding != null) {
+          this.quill.yRichtextBinding.unbindQuillAll()
         }
       },
       /**
