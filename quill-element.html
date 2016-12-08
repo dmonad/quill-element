@@ -53,11 +53,14 @@ Custom property | Description | Default
       #editorContainer {
         flex: 1;
         overflow-y: hidden;
+        display: flex;
+        flex-flow: column;
+        box-sizing: border-box;
         border: 0;
         @apply(--quill-editor-container)
       }
       .ql-editor {
-        height: 100%;
+        flex: 1;
         @apply(--quill-editor);
       }
       .ql-toolbar {
