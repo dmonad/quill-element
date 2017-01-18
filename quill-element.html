@@ -26,11 +26,11 @@ The `<quill-element>` exposes the complete API of its Quill instance. So you can
 ##### Call a method
 ```document.querySelector('quill-element').setText('Some content')```
 
-For a more in-depth documentation of the methods read the [Quill API](https://quilljs.com/docs/api/)! The following documentation is incomplete and does not cover overloaded methods. 
+For a more in-depth documentation of the methods read the [Quill API](https://quilljs.com/docs/api/)! The following documentation is incomplete and does not cover overloaded methods.
 
 ### Styling
 The following custom properties and mixins are available for styling:
- 
+
 Custom property | Description | Default
 ----------------|-------------|----------
 `--quill-toolbar` | Mixin applied to the quill toolbar | `{}`
@@ -164,7 +164,7 @@ Custom property | Description | Default
           observer: 'sheduleReload'
         },
         /**
-         * Module configuration. `modules.toolbar` is overwritten by the toolbar property 
+         * Module configuration. `modules.toolbar` is overwritten by the toolbar property
          */
         modules: {
           type: Object,
@@ -221,8 +221,8 @@ Custom property | Description | Default
           value: false
         },
         /**
-         * Enables logging (globaly for all Quill instances) at a given level: `'error'`, `'warn'`, `'log'`, and `'info'`. If `debug = ""` it logs at 'warn' level. So you can create an element like this: 
-         * 
+         * Enables logging (globaly for all Quill instances) at a given level: `'error'`, `'warn'`, `'log'`, and `'info'`. If `debug = ""` it logs at 'warn' level. So you can create an element like this:
+         *
          * ```<quill-element debug></quill-element>```
          */
         debug: {
@@ -448,18 +448,20 @@ Custom property | Description | Default
         }
       }
       /**
-       * Fires when quill is initialized. Event param: The Quill instance
-       * 
+       * Fires when quill is initialized.
+       * This may fire several times (e.g. when you change the properties).
+       * Event param: The Quill instance
+       *
        * @event init
        */
       /**
        * Fires when the editor contents changed. Event param: The Quill delta
-       * 
+       *
        * @event text-change
        */
       /**
        * Fires when the selection changes. Event param: The Quill delta
-       * 
+       *
        * @event selection-change
        */
     });
