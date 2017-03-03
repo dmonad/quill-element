@@ -9,6 +9,12 @@
     <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
     <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
 
+    <link rel="stylesheet" href="../../highlightjs/styles/monokai-sublime.css" />
+    <script type="text/javascript" src="../../highlightjs/highlight.pack.min.js"></script>
+
+    <link rel="stylesheet" href="../../KaTeX/dist/katex.min.css" />
+    <script type="text/javascript" src="../../KaTeX/dist/katex.min.js"></script>
+
     <link rel="import" href="../quill-element.html">
 
     <style is="custom-style" include="demo-pages-shared-styles">
@@ -30,7 +36,7 @@
     <div class="vertical-section-container centered">
       <h3>Style Quill</h3>
       <p> Specify `height`, and the editor turns into a scroll area if the editor content exceeds the height. </p>
-      <p> If you want the editor to grow it is recommended to specify `min-height` instead. </p> 
+      <p> If you want the editor to grow it is recommended to specify `min-height` instead. </p>
       <demo-snippet>
         <template>
           <style is="custom-style">

@@ -3,11 +3,7 @@
 <!--link rel="stylesheet" href="../quill/quill.bubble.css" /-->
 <link rel="stylesheet" href="./quill.bubble.css" />
 <link rel="stylesheet" href="./quill.snow.css" />
-<link rel="stylesheet" href="../KaTeX/dist/katex.min.css" />
-<link rel="stylesheet" href="../highlightjs/styles/monokai-sublime.css" />
 
-<script type="text/javascript" src="../KaTeX/dist/katex.min.js"></script>
-<script type="text/javascript" src="../highlightjs/highlight.pack.min.js"></script>
 <script type="text/javascript" src="../quill/quill.min.js"></script>
 
 <!--
@@ -38,6 +34,24 @@ Custom property | Description | Default
 `--quill-editor` | Mixin applied to the quill editor | `{}`
 `--quill-editor-container` | Mixin applied to the quill editor container | `{}`
 
+### KaTeX Formalar support
+
+In order to enable support for KaTeX formulas include the following libraries.
+
+```html
+<link rel="stylesheet" href="bower_components/KaTeX/dist/katex.min.css" />
+<script type="text/javascript" src="bower_components/KaTeX/dist/katex.min.js"></script>
+```
+
+### Syntax highlighting
+
+In order to enable syntax highlighting include highlightjs
+and a theme (e.g. monokai).
+
+```html
+<link rel="stylesheet" href="bower_components/highlightjs/styles/monokai-sublime.css" />
+<script type="text/javascript" src="bower_components/highlightjs/highlight.pack.min.js"></script>
+```
 
 @demo demo/index.html
 -->
@@ -110,8 +124,23 @@ Custom property | Description | Default
         editorContainer.setAttribute('id', 'editorContainer')
         this.insertBefore(editorContainer, null)
 
-        this.modules = this.modules || {}
-        this.modules.toolbar = this.toolbar
+        if (typeof this.modules === 'string') {
+          this.modules = JSON.parse(this.modules)
+        }
+        this.modules = this.modules || {
+          formula: typeof katex !== 'undefined',
+          syntax: typeof hljs !== 'undefined'
+        }
+        this.modules.toolbar = this.toolbar || [
+          [{ size: ['small', false, 'large', 'huge'] }, {font: []}],
+          ['bold', 'italic', 'underline'],
+          [{ color: [] }, { background: [] }],    // Snow theme fills in values
+          [{ script: 'sub' }, { script: 'super' }],
+          [{list: 'ordered'}, {list: 'bullet'},{align: []}],
+          ['link', 'image', 'video'],
+          (typeof katex !== 'undefined' ? ['formula'] : []).concat(['code-block', 'blockquote']),
+          ['clean']
+        ]
         var configuration = {
           bounds: this,
           modules: this.modules,
@@ -169,10 +198,6 @@ Custom property | Description | Default
          */
         modules: {
           type: Object,
-          value: {
-            formula: true,
-            syntax: true
-          },
           notify: true,
           observer: 'sheduleReload'
         },
@@ -182,16 +207,6 @@ Custom property | Description | Default
         toolbar: {
           type: Array,
           notify: true,
-          value: [
-            [{ size: ['small', false, 'large', 'huge'] }, {font: []}],
-            ['bold', 'italic', 'underline'],
-            [{ color: [] }, { background: [] }],    // Snow theme fills in values
-            [{ script: 'sub' }, { script: 'super' }],
-            [{list: 'ordered'}, {list: 'bullet'},{align: []}],
-            ['link', 'image', 'video'],
-            ['code-block', 'formula', 'blockquote'],
-            ['clean']
-          ],
           observer: 'sheduleReload'
         },
         /**
