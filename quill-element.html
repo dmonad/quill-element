@@ -462,6 +462,24 @@ and a theme (e.g. monokai).
         } else if (level === '') {
           Quill.debug('warn')
         }
+      },
+      /**Extension
+       */
+
+      /**
+       * Retrieves a module that has been added to the editor (see Quill docs)
+       */
+      getModule: function (name) {
+        return this.quill.getModule.apply(this.quill, arguments)
+      },
+
+      /**
+       * Adds and returns a container element inside the Quill container, sibling to the editor itself. 
+       By convention, Quill modules should have a class name prefixed with ql-. 
+       Optionally include a refNode where container should be inserted before. (see Quill docs)
+       */
+      addContainer: function (domNode, refNode?) {
+        return this.quill.addContainer.apply(this.quill, arguments)
       }
       /**
        * Fires when quill is initialized.
@@ -480,6 +498,7 @@ and a theme (e.g. monokai).
        *
        * @event selection-change
        */
+
     });
   </script>
 </dom-module>
