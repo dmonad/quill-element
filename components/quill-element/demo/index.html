@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+  <head>
+    <title>quill-element demo</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+
+    <link rel="import" href="../../iron-demo-helpers/demo-pages-shared-styles.html">
+    <link rel="import" href="../../iron-demo-helpers/demo-snippet.html">
+
+    <link rel="stylesheet" href="../../highlightjs/styles/monokai-sublime.css" />
+    <script type="text/javascript" src="../../highlightjs/highlight.pack.min.js"></script>
+
+    <link rel="stylesheet" href="../../KaTeX/dist/katex.min.css" />
+    <script type="text/javascript" src="../../KaTeX/dist/katex.min.js"></script>
+
+    <link rel="import" href="../quill-element.html">
+
+    <style is="custom-style" include="demo-pages-shared-styles">
+      .vertical-section-container {
+        max-width: 600px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="vertical-section-container centered">
+      <h3>Basic quill-element demo</h3>
+      <demo-snippet>
+        <template>
+          <quill-element style="height: 200px;"></quill-element>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container centered">
+      <h3>Style Quill</h3>
+      <p> Specify `height`, and the editor turns into a scroll area if the editor content exceeds the height. </p>
+      <p> If you want the editor to grow it is recommended to specify `min-height` instead. </p>
+      <demo-snippet>
+        <template>
+          <style is="custom-style">
+            .styled {
+              min-height: 200px;
+              --quill-editor: {
+                background-color: #fbffe5;
+              };
+              --quill-toolbar: {
+                text-align: center;
+              }
+            }
+          </style>
+          <quill-element class="styled"></quill-element>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container centered">
+      <h3>Configure toolbar</h3>
+      <p> Note: write " instead of &amp;quot;</p>
+      <!--<pre>&lt;quill-element toolbar='[["bold", "italic", "underline"]]'&gt;&lt;/quill-element&gt;</code></pre>-->
+      <demo-snippet>
+        <template>
+          <quill-element toolbar='[["bold", "italic", "underline"]]'></quill-element>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container centered">
+      <h3>Change theme</h3>
+      <demo-snippet>
+        <template>
+          <!-- It is a good idea to specify a height, so that you can see the tooltip -->
+          <style is="custom-style">
+            .quill-bubble {
+              --quill-editor: {
+                min-height: 150px;
+              }
+            }
+          </style>
+          <quill-element class="quill-bubble" theme="bubble" placeholder="Hey, type something!" toolbar='[["bold", "italic", "underline"]]'></quill-element>
+        </template>
+      </demo-snippet>
+    </div>
+
+    <div class="vertical-section-container centered">
+      <h3>Disable user input</h3>
+      <demo-snippet>
+        <template>
+          <quill-element disabled theme="bubble" placeholder="C'mon, type something! What, you can't?" toolbar='[]'></quill-element>
+        </template>
+      </demo-snippet>
+    </div>
+
+  </body>
+</html>

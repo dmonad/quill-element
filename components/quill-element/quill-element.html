@@ -1,0 +1,504 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--link rel="stylesheet" href="../quill/quill.bubble.css" /-->
+<link rel="stylesheet" href="./quill.bubble.css" />
+<link rel="stylesheet" href="./quill.snow.css" />
+
+<script type="text/javascript" src="../quill/quill.min.js"></script>
+
+<!--
+# &lt;quill-element&gt;  <iframe src="https://ghbtns.com/github-btn.html?user=dmonad&repo=quill-element&type=star&count=true" frameborder="0" scrolling="0" width="170px" height="20px"></iframe>
+
+Polymer Web Component of the awesome [Quill](http://quilljs.com) richtext editor!
+
+```
+bower i --save quill-element
+```
+
+The `<quill-element>` exposes the complete API of its Quill instance. So you can easily add event handlers, or modify its content. I.e.
+
+##### Create event listener
+```<quill-element on-text-change="textChanged"></quill-element>```
+
+##### Call a method
+```document.querySelector('quill-element').setText('Some content')```
+
+For a more in-depth documentation of the methods read the [Quill API](https://quilljs.com/docs/api/)! The following documentation is incomplete and does not cover overloaded methods.
+
+### Styling
+The following custom properties and mixins are available for styling:
+
+Custom property | Description | Default
+----------------|-------------|----------
+`--quill-toolbar` | Mixin applied to the quill toolbar | `{}`
+`--quill-editor` | Mixin applied to the quill editor | `{}`
+`--quill-editor-container` | Mixin applied to the quill editor container | `{}`
+
+### KaTeX Formalar support
+
+In order to enable support for KaTeX formulas include the following libraries.
+
+```html
+<link rel="stylesheet" href="bower_components/KaTeX/dist/katex.min.css" />
+<script type="text/javascript" src="bower_components/KaTeX/dist/katex.min.js"></script>
+```
+
+### Syntax highlighting
+
+In order to enable syntax highlighting include highlightjs
+and a theme (e.g. monokai).
+
+```html
+<link rel="stylesheet" href="bower_components/highlightjs/styles/monokai-sublime.css" />
+<script type="text/javascript" src="bower_components/highlightjs/highlight.pack.min.js"></script>
+```
+
+@demo demo/index.html
+-->
+
+<dom-module id="quill-element">
+  <template>
+    <style>
+      :host {
+        display: flex;
+        flex-flow: column;
+        box-sizing: border-box;
+        border: 1px solid #ccc;
+      }
+      #editorContainer {
+        flex: 1;
+        overflow-y: hidden;
+        display: flex;
+        flex-flow: column;
+        box-sizing: border-box;
+        border: 0;
+        @apply(--quill-editor-container)
+      }
+      .ql-editor {
+        flex: 1;
+        @apply(--quill-editor);
+      }
+      .ql-toolbar {
+        border-top: 0;
+        border-right: 0;
+        border-left: 0;
+        border-bottom: 1px solid #ccc;
+      }
+      .ql-toolbar {
+        @apply(--quill-toolbar);
+      }
+      :host([_hide-tools]) .ql-toolbar {
+        display: none !important;
+      }
+      :host([_hide-tools]) .ql-tooltip {
+        display: none !important;
+      }
+    </style>
+  </template>
+
+  <script>
+    Polymer({
+      ready: function () {
+        this._reloadTimeout = null
+        this.init()
+      },
+      detached: function () {
+        if (this.quill != null && this.quill.yRichtextBinding != null) {
+          this.quill.yRichtextBinding.unbindQuillAll()
+        }
+      },
+      sheduleReload: function () {
+        if (this._reloadTimeout == null) {
+          var self = this
+          this._reloadTimeout = window.setTimeout(function () {
+            self.init()
+          }, 0)
+        }
+      },
+      init: function () {
+        var children = this.children
+        for (var i = children.length - 1; i >= 0; i--) {
+          children[i].remove()
+        }
+        var editorContainer = document.createElement('div')
+        editorContainer.setAttribute('id', 'editorContainer')
+        this.insertBefore(editorContainer, null)
+
+        if (typeof this.modules === 'string') {
+          this.modules = JSON.parse(this.modules)
+        }
+        this.modules = this.modules || {
+          formula: typeof katex !== 'undefined',
+          syntax: typeof hljs !== 'undefined'
+        }
+        this.modules.toolbar = this.toolbar || [
+          [{ size: ['small', false, 'large', 'huge'] }, {font: []}],
+          ['bold', 'italic', 'underline'],
+          [{ color: [] }, { background: [] }],    // Snow theme fills in values
+          [{ script: 'sub' }, { script: 'super' }],
+          [{list: 'ordered'}, {list: 'bullet'},{align: []}],
+          ['link', 'image', 'video'],
+          (typeof katex !== 'undefined' ? ['formula'] : []).concat(['code-block', 'blockquote']),
+          ['clean']
+        ]
+        var configuration = {
+          bounds: this,
+          modules: this.modules,
+          theme: this.theme,
+          readOnly: this.readOnly,
+          placeholder: this.placeholder
+        }
+        if (this.formats != null) {
+          configuration.formats = this.formats
+        }
+        this.quill = new Quill(editorContainer, configuration)
+        this.fire('init', this.quill)
+        var self = this
+        this.quill.on('text-change', function (event) {
+          self.fire('text-change', event)
+        })
+        this.quill.on('selection-change', function (event) {
+          self.fire('selection-change', event)
+        })
+        // Make the custom styles work (quill adds html elements after ready is called)
+        for (var i = 0; i < this.children.length; i++) {
+          this.scopeSubtree(this.children[i], true)
+        }
+        if (this.disabled) {
+          this.quill.disable()
+        }
+        if (this.yRichtext != null) {
+          this.bindYRichtext(this.yRichtext)
+        }
+        // make sure init is not called again
+        clearTimeout(this._reloadTimeout)
+        this._reloadTimeout = null
+      },
+      is: 'quill-element',
+      properties: {
+        /**
+         * Whitelist for all formats to allow. Defaults to enable all formats
+         */
+        formats: {
+          type: Array,
+          notify: true,
+          observer: 'sheduleReload'
+        },
+        /**
+         * The Quill theme. Choose either "snow" or "bubble".
+         */
+        theme: {
+          type: String,
+          value: 'snow',
+          notify: true,
+          observer: 'sheduleReload'
+        },
+        /**
+         * Module configuration. `modules.toolbar` is overwritten by the toolbar property
+         */
+        modules: {
+          type: Object,
+          notify: true,
+          observer: 'sheduleReload'
+        },
+        /**
+         * Configuration of the toolbar
+         */
+        toolbar: {
+          type: Array,
+          notify: true,
+          observer: 'sheduleReload'
+        },
+        /**
+         * Whether this instance is read-only
+         */
+        readOnly: {
+          type: Boolean,
+          notify: true,
+          value: false,
+          observer: 'disable'
+        },
+        /**
+         * Placeholder when there is no content
+         */
+        placeholder: {
+          type: String,
+          notify: true,
+          value: null,
+          observer: 'sheduleReload'
+        },
+        /**
+         * Disables the ability to edit
+         */
+        disabled: {
+          type: Boolean,
+          notify: true,
+          observer: 'disable',
+          value: false
+        },
+        /**
+         * Enables logging (globaly for all Quill instances) at a given level: `'error'`, `'warn'`, `'log'`, and `'info'`. If `debug = ""` it logs at 'warn' level. So you can create an element like this:
+         *
+         * ```<quill-element debug></quill-element>```
+         */
+        debug: {
+          type: String,
+          notify: true,
+          observer: 'enableDebug'
+        },
+        /**
+         *  Share the content of quill using [Yjs](https://github.com/y-js/yjs) and [y-element](https://github.com/y-js/y-element). E.g.
+         *
+         * ```
+<y-element
+  connector-name="websockets-client"
+  connector-room="quill-testing"
+  db-name="memory">
+  <y-type
+    name="quill"
+    type="Richtext"
+    data="{{richtext}}"></y-type>
+</y-element>
+<quill-element y-richtext="{{richtext}}"></quill-element>
+         * ```
+         */
+        yRichtext: {
+          type: Object,
+          notify: true,
+          observer: 'bindYRichtext'
+        },
+        /**
+         * Hide toolbar / hide tooltip
+         */
+        hideTools: {
+          type: Boolean,
+          notify: true,
+          value: false,
+          observer: '_hideTools'
+        }
+      },
+      _hideTools: function (hide) {
+        if (hide) {
+          this.setAttribute('_hide-tools', true)
+        } else {
+          this.removeAttribute('_hide-tools')
+        }
+      },
+      /**
+       * Bind this editor to a [Y.Richtext](https://github.com/y-js/y-richtext) type
+       */
+      bindYRichtext: function (yrichtext) {
+        if (yrichtext != null) {
+          if (yrichtext.type != null) {
+            yrichtext = yrichtext.type
+          }
+          if (this.quill != null) {
+            yrichtext.unbindQuillAll()
+            yrichtext.bindQuill(this.quill)
+          }
+        } else if (this.quill != null && this.quill.yRichtextBinding != null) {
+          this.quill.yRichtextBinding.unbindQuillAll()
+        }
+      },
+      /**
+       * Sets the ability to edit the editor
+       */
+      enable: function (enabled) {
+        return this.quill.enable(enabled)
+      },
+      /**
+       * Disables the ability to edit the editor. In addition to the Quill API this method also accepts an optional parameter which specifies whether to disable the user input.
+       */
+      disable: function (disabled) {
+        disabled = disabled == null ? true : disabled
+        if (this.quill != null) {
+          return this.quill.enable(!disabled)
+        }
+      },
+      /**
+       * Delete a range of text
+       */
+      deleteText: function (index, length) {
+        return this.quill.deleteText.apply(this.quill, arguments)
+      },
+      /**
+       * Retrieves the contents as a Quill Delta (see Quill docs)
+       */
+      getContents: function (index, length) {
+        return this.quill.getContents.apply(this.quill, arguments)
+      },
+      /**
+       * Gets the length of the editor content
+       */
+      getLength: function () {
+        return this.quill.getLength.apply(this.quill, arguments)
+      },
+      /**
+       * Gets the content of the editor without formatting
+       */
+      getText: function (index, length) {
+        return this.quill.getText.apply(this.quill, arguments)
+      },
+      /**
+       * Inserts embedded content into the editor
+       */
+      insertEmbed: function (index, type, value, source) {
+        return this.quill.insertEmbed.apply(this.quill, arguments)
+      },
+      /**
+       * Inserts text content into the editor
+       */
+      insertText: function (index, text, format, value, source) {
+        return this.quill.insertText.apply(this.quill, arguments)
+      },
+      /**
+       * Overwrites the content of the editor using a quill delta
+       */
+      setContents: function (delta, source) {
+        return this.quill.setContents.apply(this.quill, arguments)
+      },
+      /**
+       * Overwrites the content of the editor using text
+       */
+      setText: function (text, source) {
+        return this.quill.setText.apply(this.quill, arguments)
+      },
+      /**
+       * Synchronously checks the editor for updates and fire events
+       */
+      update: function () {
+        return this.quill.update.apply(this.quill, arguments)
+      },
+      /**
+       * Applies a quill delta to the editor contents
+       */
+      updateContents: function (delta, source) {
+        return this.quill.updateContents.apply(this.quill, arguments)
+      },
+      /**
+       * Formats text at the users selection
+       */
+      format: function (name, value, source) {
+        return this.quill.format.apply(this.quill, arguments)
+      },
+      /**
+       * Formats all lines in the given range
+       */
+      formatLine: function (index, length, format, source) {
+        return this.quill.formatLine.apply(this.quill, arguments)
+      },
+      /**
+       * Formats text in the editor
+       */
+      formatText: function (index, length, format, source) {
+        return this.quill.formatText.apply(this.quill, arguments)
+      },
+      /**
+       * Retrieves the text in the given range
+       */
+      getFormat: function (index, length) {
+        return this.quill.getFormat.apply(this.quill, arguments)
+      },
+      /**
+       * Removes all formatting and embeds within the given range
+       */
+      removeFormat: function (index, length, source) {
+        return this.quill.removeFormat.apply(this.quill, arguments)
+      },
+      /**
+       * Removes the focus from the editor
+       */
+      blur: function () {
+        return this.quill.blur.apply(this.quill, arguments)
+      },
+      /**
+       * Retrieves the pixel location and dimensions of a selection at a given location
+       */
+      getBounds: function (index, length) {
+        return this.quill.getBounds.apply(this.quill, arguments)
+      },
+      /**
+       * Retrieves the user's selection range
+       */
+      getSelection: function (focus) {
+        return this.quill.getSelection.apply(this.quill, arguments)
+      },
+      /**
+       * Checks if the editor has focus
+       */
+      hasFocus: function () {
+        return this.quill.hasFocus.apply(this.quill, arguments)
+      },
+      /**
+       * Sets user selection to given range
+       */
+      setSelection: function (index, length, source) {
+        return this.quill.setSelection.apply(this.quill, arguments)
+      },
+      /**
+       * Adds an event handler
+       */
+      on: function (name, handler) {
+        return this.quill.on.apply(this.quill, arguments)
+      },
+      /**
+       * Adds an event handler that is removed after the first event occured
+       */
+      once: function (name, handler) {
+        return this.quill.once.apply(this.quill, arguments)
+      },
+      /**
+       * Removes an event handler
+       */
+      off: function (name, handler) {
+        return this.quill.off.apply(this.quill, arguments)
+      },
+      /**
+       * Enables logging (globaly for all Quill instances) at a given level: `'error'`, `'warn'`, `'log'`, and `'info'`. If `level = ''` it logs at 'warn' level (this is different in the Quill API)
+       */
+      enableDebug: function (level) {
+        if (level) {
+          Quill.debug(level)
+        } else if (level === '') {
+          Quill.debug('warn')
+        }
+      },
+      /**Extension
+       */
+
+      /**
+       * Retrieves a module that has been added to the editor (see Quill docs)
+       */
+      getModule: function (name) {
+        return this.quill.getModule.apply(this.quill, arguments)
+      },
+
+      /**
+       * Adds and returns a container element inside the Quill container, sibling to the editor itself. 
+       By convention, Quill modules should have a class name prefixed with ql-. 
+       Optionally include a refNode where container should be inserted before. (see Quill docs)
+       */
+      addContainer: function (domNode, refNode) {
+        return this.quill.addContainer.apply(this.quill, arguments)
+      }
+      /**
+       * Fires when quill is initialized.
+       * This may fire several times (e.g. when you change the properties).
+       * Event param: The Quill instance
+       *
+       * @event init
+       */
+      /**
+       * Fires when the editor contents changed. Event param: The Quill delta
+       *
+       * @event text-change
+       */
+      /**
+       * Fires when the selection changes. Event param: The Quill delta
+       *
+       * @event selection-change
+       */
+
+    });
+  </script>
+</dom-module>

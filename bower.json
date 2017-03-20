@@ -1,0 +1,36 @@
+{
+  "name": "quill-element",
+  "description": "Polymer Web Component of the awesome [Quill](http://quilljs.com) richtext editor!",
+  "main": "quill-element.html",
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.4.0",
+    "quill": "https://github.com/quilljs/quill/releases/download/v1.1.6/quill.tar.gz",
+    "KaTeX": "katex#^0.6.0",
+    "highlightjs": "^9.6.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-demo-helpers": "PolymerElements/iron-demo-helpers#^1.0.0",
+    "web-component-tester": "^4.0.0",
+    "webcomponentsjs": "webcomponents/webcomponentsjs#^0.7.0"
+  },
+  "homepage": "https://dmonad.github.io/quill-element/",
+  "authors": [
+    "Kevin Jahns <kevin.jahns@rwth-aachen.de>"
+  ],
+  "keywords": [
+    "quill",
+    "richtext",
+    "editor",
+    "polymer",
+    "web-components"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
