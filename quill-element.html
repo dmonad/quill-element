@@ -478,7 +478,7 @@ and a theme (e.g. monokai).
        By convention, Quill modules should have a class name prefixed with ql-. 
        Optionally include a refNode where container should be inserted before. (see Quill docs)
        */
-      addContainer: function (domNode, refNode?) {
+      addContainer: function (domNode, refNode) {
         return this.quill.addContainer.apply(this.quill, arguments)
       }
       /**
