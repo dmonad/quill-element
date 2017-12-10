@@ -24,21 +24,21 @@
     suite('quill-element', () => {
 
       test('instantiating the element works', () => {
-        var element = fixture('basic')
+        const element = fixture('basic')
         assert.equal(element.is, 'quill-element')
       })
 
       test('insertText fires text-change event', () => {
-        var element = fixture('basic')
-        var fired = false
+        const element = fixture('basic')
+        let fired = false
         element.addEventListener('text-change', event => fired = true && event.detail.ops != null)
         element.insertText(0, 'some text')
         assert.equal(fired, true)
       })
 
       test('formatText work fires text-change event (counting two events)', () => {
-        var element = fixture('basic')
-        var fired = 0
+        const element = fixture('basic')
+        let fired = 0
         element.addEventListener('text-change', () => fired++)
         element.insertText(0, 'some text')
         element.formatText(1, 3, 'bold', true)
