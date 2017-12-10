@@ -65,6 +65,7 @@ and a theme (e.g. monokai).
         box-sizing: border-box;
         border: 1px solid #ccc;
       }
+
       #editorContainer {
         flex: 1;
         overflow-y: hidden;
@@ -74,22 +75,27 @@ and a theme (e.g. monokai).
         border: 0;
         @apply(--quill-editor-container)
       }
+
       .ql-editor {
         flex: 1;
         @apply(--quill-editor);
       }
+
       .ql-toolbar {
         border-top: 0;
         border-right: 0;
         border-left: 0;
         border-bottom: 1px solid #ccc;
       }
+
       .ql-toolbar {
         @apply(--quill-toolbar);
       }
+
       :host([_hide-tools]) .ql-toolbar {
         display: none !important;
       }
+
       :host([_hide-tools]) .ql-tooltip {
         display: none !important;
       }
@@ -132,11 +138,11 @@ and a theme (e.g. monokai).
           syntax: typeof hljs !== 'undefined'
         }
         this.modules.toolbar = this.toolbar || [
-          [{ size: ['small', false, 'large', 'huge'] }, {font: []}],
+          [{ size: ['small', false, 'large', 'huge'] }, { font: [] }],
           ['bold', 'italic', 'underline'],
           [{ color: [] }, { background: [] }],    // Snow theme fills in values
           [{ script: 'sub' }, { script: 'super' }],
-          [{list: 'ordered'}, {list: 'bullet'},{align: []}],
+          [{ list: 'ordered' }, { list: 'bullet' }, { align: [] }],
           ['link', 'image', 'video'],
           (typeof katex !== 'undefined' ? ['formula'] : []).concat(['code-block', 'blockquote']),
           ['clean']
@@ -176,6 +182,15 @@ and a theme (e.g. monokai).
       },
       is: 'quill-element',
       properties: {
+        /**
+         * Content.
+         */
+        content: {
+          type: String,
+          value: '',
+          notify: true,
+          observer: '_contentChanged'
+        },
         /**
          * Whitelist for all formats to allow. Defaults to enable all formats
          */
@@ -480,6 +495,12 @@ and a theme (e.g. monokai).
        */
       addContainer: function (domNode, refNode) {
         return this.quill.addContainer.apply(this.quill, arguments)
+      },
+
+      // Content Change
+      _contentChanged: function () {
+        if (this.content.length > 1)
+          this.quill.setContents(JSON.parse(this.content), 'api')
       }
       /**
        * Fires when quill is initialized.

@@ -1,53 +1,86 @@
 <!doctype html>
 
 <html>
-  <head>
-    <title>quill-element test</title>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
-    <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
-    <script src="../../web-component-tester/browser.js"></script>
 
-    <link rel="import" href="../quill-element.html">
-  </head>
-  <body>
+<head>
+  <title>quill-element test</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+  <script src="../../webcomponentsjs/webcomponents-lite.js"></script>
+  <script src="../../web-component-tester/browser.js"></script>
 
-    <test-fixture id="basic">
-      <template>
-        <quill-element debug></quill-element>
-      </template>
-    </test-fixture>
+  <link rel="import" href="../quill-element.html">
+</head>
 
-    <script>
-      suite('quill-element', function() {
+<body>
 
-        test('instantiating the element works', function() {
-          var element = fixture('basic')
-          assert.equal(element.is, 'quill-element')
-        })
+  <test-fixture id="basic">
+    <template>
+      <quill-element debug></quill-element>
+    </template>
+  </test-fixture>
 
-        test('insertText fires text-change event', function () {
-          var element = fixture('basic')
-          var fired = false
-          element.addEventListener('text-change', function (event) {
-            fired = true && event.detail.ops != null
-          })
-          element.insertText(0, 'some text')
-          assert.equal(fired, true)
-        })
+  <script>
+    suite('quill-element', () => {
 
-        test('formatText work fires text-change event (counting two events)', function () {
-          var element = fixture('basic')
-          var fired = 0
-          element.addEventListener('text-change', function () {
-            fired++
-          })
-          element.insertText(0, 'some text')
-          element.formatText(1, 3, 'bold', true)
-          assert.equal(fired, 2)
-        })
-
+      test('instantiating the element works', () => {
+        const element = fixture('basic')
+        assert.equal(element.is, 'quill-element')
       })
-    </script>
-  </body>
+
+      test('insertText fires text-change event', () => {
+        const element = fixture('basic')
+        let fired = false
+        element.addEventListener('text-change', event => fired = true && event.detail.ops != null)
+        element.insertText(0, 'some text')
+        assert.equal(fired, true)
+      })
+
+      test('insertText changes the editors content', () => {
+        const element = fixture('basic')
+        element.insertText(0, 'some text')
+        const content = element.getContents()
+        assert.equal(content.ops[0].insert, ['some text\n'])
+      })
+
+      test('formatText work fires text-change event (counting two events)', () => {
+        const element = fixture('basic')
+        let fired = 0
+        element.addEventListener('text-change', () => fired++)
+        element.insertText(0, 'some text')
+        element.formatText(1, 3, 'bold', true)
+        assert.equal(fired, 2)
+      })
+
+      test('setContents changes the editors content', () => {
+        const element = fixture('basic'),
+          result = element.setContents({
+            "ops": [
+              { "insert": "some text\n" }
+            ]
+          }),
+          contentsAfterTestSet = element.getContents()
+        assert.deepEqual(contentsAfterTestSet.ops[0], { "insert": "some text\n" })
+      })
+
+      test('content property exists', () => {
+        const element = fixture('basic'),
+          contentProperty = element.content
+        assert.isDefined(contentProperty)
+      })
+
+      test('_contentChanged changes the editors content', () => {
+        const element = fixture('basic')
+        element.content = {
+          "ops": [
+            { "insert": "some text\n" }
+          ]
+        }
+        assert.deepEqual(element.content.ops[0], { "insert": "some text\n" })
+      })
+
+    })
+  </script>
+</body>
+
 </html>
