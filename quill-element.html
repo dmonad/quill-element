@@ -500,8 +500,11 @@ and a theme (e.g. monokai).
       // Content Change
       _contentChanged: function (newValue, oldValue) {
         this.async(() => {
-          if (this.content.length > 1)
+          try {
             this.quill.setContents(JSON.parse(newValue), 'api')
+          } catch (err) {
+            return err
+          }
         }, 100)
       }
       /**
