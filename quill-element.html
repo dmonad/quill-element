@@ -499,7 +499,7 @@ and a theme (e.g. monokai).
 
       // Content Change
       _contentChanged: function (newValue, oldValue) {
-        this.async(function () {
+        this.async(() => {
           if (this.content.length > 1)
             this.quill.setContents(JSON.parse(newValue), 'api')
               , 100
